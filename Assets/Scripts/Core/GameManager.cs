@@ -1,3 +1,4 @@
+using UnityEngine.EventSystems;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -535,6 +536,8 @@ public class GameManager : MonoBehaviour
             Destroy(existingEventSystem.gameObject);
         }
 
+        CreateStandaloneEventSystem();
+
         GameObject audioObj = GameObject.Find("Audio Manager");
         if (audioObj != null)
         {
@@ -558,6 +561,7 @@ public class GameManager : MonoBehaviour
         }
 
         EnsureMenuCamera();
+        CreateStandaloneEventSystem();
 
         GameObject menuObj = new GameObject("Main Menu");
         menuObj.AddComponent<MainMenu>();
@@ -578,6 +582,18 @@ public class GameManager : MonoBehaviour
         camera.backgroundColor = Color.black;
         camObj.tag = "MainCamera";
         camObj.AddComponent<AudioListener>();
+    }
+
+    void CreateStandaloneEventSystem()
+    {
+        if (FindObjectOfType<EventSystem>() != null)
+        {
+            return;
+        }
+
+        GameObject eventSystemObj = new GameObject("EventSystem");
+        eventSystemObj.AddComponent<EventSystem>();
+        eventSystemObj.AddComponent<StandaloneInputModule>();
     }
 
     public Vector2Int GetPlayerGridPosition()
