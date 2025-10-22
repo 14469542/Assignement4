@@ -531,12 +531,10 @@ public class GameManager : MonoBehaviour
         }
 
         EventSystem existingEventSystem = FindObjectOfType<EventSystem>();
-        if (existingEventSystem != null)
+        if (existingEventSystem == null)
         {
-            Destroy(existingEventSystem.gameObject);
+            CreateStandaloneEventSystem();
         }
-
-        CreateStandaloneEventSystem();
 
         GameObject audioObj = GameObject.Find("Audio Manager");
         if (audioObj != null)
@@ -590,6 +588,9 @@ public class GameManager : MonoBehaviour
         {
             return;
         }
+
+        Debug.Log("Creating standalone EventSystem");
+
 
         GameObject eventSystemObj = new GameObject("EventSystem");
         eventSystemObj.AddComponent<EventSystem>();
