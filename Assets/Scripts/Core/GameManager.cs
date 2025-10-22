@@ -61,27 +61,26 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-         if (gameTimerRunning)
-    {
-        gameTimerSeconds += Time.deltaTime;
-    }
-
-    if (isPowerMode)
-    {
-        powerModeTimer -= Time.deltaTime;
-        if (powerModeTimer <= 0f)
+        if (gameTimerRunning)
         {
-            DeactivatePowerMode();
+            gameTimerSeconds += Time.deltaTime;
         }
-    }
 
-  
-    if (Input.GetKeyDown(KeyCode.R) && Time.timeScale != 0f)
-    {
-        RestartGame();
-    }
-    
-    CheckCollisions();
+        if (isPowerMode)
+        {
+            powerModeTimer -= Time.deltaTime;
+            if (powerModeTimer <= 0f)
+            {
+                DeactivatePowerMode();
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            RestartGame();
+        }
+
+        CheckCollisions();
     }
 
 
@@ -103,12 +102,11 @@ public class GameManager : MonoBehaviour
 
                 if (ghostController.IsVulnerable())
                 {
-                    // 幽灵可被吃掉
+                    
                     EatGhost(ghostController);
                 }
                 else if (ghostController.currentMode != GhostMode.Dead)
                 {
-                    // 玩家被幽灵碰到
                     PlayerHit();
                 }
             }
@@ -119,7 +117,7 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("=== Initializing Game ===");
 
-        // 创建核心系统
+        
         CreateCamera();
         CreateGridManager();
         PrepareSprites();
@@ -178,10 +176,10 @@ public class GameManager : MonoBehaviour
         camObj.tag = "MainCamera";
         camObj.AddComponent<AudioListener>();
 
-        // 居中摄像机
+        
         int[,] level = LevelData.GetLevel1();
         float centerX = (level.GetLength(1) - 1) / 2f;
-        float centerY = (level.GetLength(0) - 1) / 2f;
+                float centerY = (level.GetLength(0) - 1) / 2f;
         camObj.transform.position = new Vector3(centerX, centerY, -10f);
 
         Debug.Log($"Camera created at position: ({centerX}, {centerY}, -10)");
@@ -194,7 +192,7 @@ public class GameManager : MonoBehaviour
         gridObj.transform.SetParent(transform);
         GridManager gridManager = gridObj.AddComponent<GridManager>();
 
-        // 初始化网格数据
+        
         int[,] levelData = LevelData.GetLevel1();
         gridManager.InitializeGrid(levelData);
 
@@ -464,139 +462,47 @@ public class GameManager : MonoBehaviour
     }
 
 
-    /// <summary>
-    /// 重启游戏 - 方案2：直接重新初始化
-    /// </summary>
     public void RestartGame()
     {
-        Debug.Log("🔴 ========== RESTART GAME CALLED ==========");
-    Debug.Log($"Current timeScale: {Time.timeScale}");
-    
-    // 停止所有协程
-    StopAllCoroutines();
-    Debug.Log("✅ All coroutines stopped");
-    
-    // 立即恢复时间
-    Time.timeScale = 1f;
-    Debug.Log("✅ timeScale set to 1");
-    
-    // 开始重启流程
-    Debug.Log("🟡 Starting PerformRestart coroutine...");
-    StartCoroutine(PerformRestart());
-    }
-    
-    IEnumerator PerformRestart()
-{
-    Debug.Log("🟢 PerformRestart: Started");
-    
-    // 销毁 Game Over UI
-    GameObject gameOverUI = GameObject.Find("GameOverUI");
-    if (gameOverUI != null)
-    {
-        Debug.Log("🟡 Found GameOverUI, destroying...");
-        Destroy(gameOverUI);
-    }
-    else
-    {
-        Debug.Log("⚠️ GameOverUI not found");
-    }
-    
-    // 查找并销毁 Game Over Canvas
-    GameObject[] allObjects = GameObject.FindObjectsOfType<GameObject>();
-    foreach (GameObject obj in allObjects)
-    {
-        if (obj.name.Contains("GameOver") || obj.name.Contains("Canvas"))
+        Debug.Log("Restarting game...");
+
+        Time.timeScale = 1f;
+        gameTimerRunning = false;
+
+        string targetScene = startSceneName;
+        if (!string.IsNullOrEmpty(targetScene) && Application.CanStreamedLevelBeLoaded(targetScene))
         {
-            Debug.Log($"🟡 Destroying: {obj.name}");
-            Destroy(obj);
+            SceneManager.LoadScene(targetScene);
+            return;
         }
-    }
-    
-    Debug.Log("🟢 Cleaning up child objects...");
-    
-    // 清理所有子对象
-    int childCount = transform.childCount;
-    Debug.Log($"🟡 Found {childCount} child objects");
-    
-    for (int i = transform.childCount - 1; i >= 0; i--)
-    {
-        Transform child = transform.GetChild(i);
-        Debug.Log($"🟡 Destroying child: {child.name}");
-        Destroy(child.gameObject);
-    }
-    
-    // 清理玩家
-    if (player != null)
-    {
-        Debug.Log("🟡 Destroying player");
-        Destroy(player);
-        player = null;
-    }
-    
-    // 清理摄像机
-    if (mainCamera != null)
-    {
-        Debug.Log("🟡 Destroying camera");
-        Destroy(mainCamera.gameObject);
-        mainCamera = null;
-    }
-    
-    // 清空集合
-    Debug.Log($"🟡 Clearing ghosts list (count: {ghosts.Count})");
-    ghosts.Clear();
-    
-    Debug.Log($"🟡 Clearing pellet lookup (count: {pelletLookup.Count})");
-    pelletLookup.Clear();
-    
-    levelParent = null;
-    
-    // 重置游戏状态
-    score = 0;
-    lives = 3;
-    isPowerMode = false;
-    powerModeTimer = 0f;
-    gameTimerSeconds = 0f;
-    gameTimerRunning = false;
-    
-    Debug.Log("🟢 All cleanup complete, waiting 0.1 seconds...");
-    
-    // 等待销毁完成
-    yield return new WaitForSecondsRealtime(0.1f);
-    
-    Debug.Log("🟢 Wait complete, starting InitializeGame()...");
-    
-    // 重新初始化
-    try
-    {
-        InitializeGame();
-        Debug.Log("✅ ========== GAME RESTARTED SUCCESSFULLY ==========");
-    }
-    catch (System.Exception e)
-    {
-        Debug.LogError($"❌ ERROR during InitializeGame: {e.Message}");
-        Debug.LogError($"Stack trace: {e.StackTrace}");
-    }
-}
 
-    void ClearCurrentGame()
-    {
-        Debug.Log("Clearing current game objects...");
+        Scene activeScene = SceneManager.GetActiveScene();
+        if (Application.CanStreamedLevelBeLoaded(activeScene.name))
+        {
+            SceneManager.LoadScene(activeScene.name);
+            return;
+        }
 
-        // 销毁关卡
+        Debug.LogWarning("RestartGame fallback triggered. Rebuilding menu without scene reload.");
+        ClearRuntimeObjects();
+        SpawnMainMenu();
+        Destroy(gameObject);
+    }
+
+    void ClearRuntimeObjects()
+    {
         if (levelParent != null)
         {
             Destroy(levelParent);
             levelParent = null;
         }
 
-        // 销毁玩家
         if (player != null)
         {
             Destroy(player);
             player = null;
         }
 
-        // 销毁所有幽灵
         foreach (GameObject ghost in ghosts)
         {
             if (ghost != null)
@@ -606,65 +512,46 @@ public class GameManager : MonoBehaviour
         }
         ghosts.Clear();
 
-        // 销毁 UI
-        GameObject uiObj = GameObject.Find("=== UI ===");
-        if (uiObj != null)
-        {
-            Destroy(uiObj);
-        }
-
-        // 销毁摄像机
         if (mainCamera != null)
         {
             Destroy(mainCamera.gameObject);
             mainCamera = null;
         }
 
-        // 销毁网格管理器
-        GameObject gridObj = GameObject.Find("Grid Manager");
-        if (gridObj != null)
+        if (GridManager.Instance != null)
         {
-            Destroy(gridObj);
+            Destroy(GridManager.Instance.gameObject);
         }
 
-        // 销毁音频管理器（重置音乐）
+        GameObject uiObj = GameObject.Find("=== UI ===");
+        if (uiObj != null)
+        {
+            Destroy(uiObj);
+        }
+
         GameObject audioObj = GameObject.Find("Audio Manager");
         if (audioObj != null)
         {
             Destroy(audioObj);
         }
 
-        // 清空豆子字典
         pelletLookup.Clear();
-
-        Debug.Log("Game objects cleared");
+        score = 0;
+        lives = 3;
+        isPowerMode = false;
+        powerModeTimer = 0f;
+        gameTimerSeconds = 0f;
     }
 
-
-    public void ExitToStartScene()
+    void SpawnMainMenu()
     {
-        gameTimerRunning = false;
-        Time.timeScale = 1f;
-
-        if (string.IsNullOrEmpty(startSceneName))
+        if (FindObjectOfType<MainMenu>() != null)
         {
-            Debug.LogWarning("Start scene name is not configured.");
             return;
         }
 
-        if (!Application.CanStreamedLevelBeLoaded(startSceneName))
-        {
-            Debug.LogWarning($"Unable to load start scene '{startSceneName}'. Check build settings.");
-            return;
-        }
-
-        if (SceneManager.GetActiveScene().name == startSceneName)
-        {
-            Debug.Log("Already in start scene.");
-            return;
-        }
-
-        SceneManager.LoadScene(startSceneName);
+        GameObject menuObj = new GameObject("Main Menu");
+        menuObj.AddComponent<MainMenu>();
     }
 
     public Vector2Int GetPlayerGridPosition()
@@ -718,12 +605,14 @@ public class GameManager : MonoBehaviour
             Vector2Int startPos = LevelData.GetPlayerStartPosition();
             player.transform.position = GridManager.Instance.GridToWorld(startPos);
 
-            // 重置玩家状态
+            
             PacStudentController controller = player.GetComponent<PacStudentController>();
+            if (controller != null)
+            {
             controller.ResetPosition();
+            }
 
-            // 暂停游戏 2 秒
-            Time.timeScale = 0f;
+            
             gameTimerRunning = false;
             StartCoroutine(ResumeAfterDelay(2f));
         }
@@ -744,11 +633,22 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 0f;
         gameTimerRunning = false;
 
-        // 显示游戏结束界面
+        
         GameObject gameOverUI = new GameObject("GameOverUI");
         gameOverUI.AddComponent<GameOverUI>();
 
         AudioManager.Instance?.PlaySound("GameOver");
         AudioManager.Instance?.StopMusic();
     }
+
+    void OnDestroy()
+    {
+        if (Instance == this)
+        {
+            Instance = null;
+        }
+    }
 }
+
+
+
