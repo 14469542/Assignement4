@@ -77,6 +77,7 @@ public class GameManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.R))
         {
+            Debug.Log("GameManager detected R key");
             RestartGame();
         }
 
@@ -469,25 +470,11 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1f;
         gameTimerRunning = false;
 
-        string targetScene = startSceneName;
-        if (!string.IsNullOrEmpty(targetScene) && Application.CanStreamedLevelBeLoaded(targetScene))
-        {
-            SceneManager.LoadScene(targetScene);
-            return;
-        }
-
-        Scene activeScene = SceneManager.GetActiveScene();
-        if (Application.CanStreamedLevelBeLoaded(activeScene.name))
-        {
-            SceneManager.LoadScene(activeScene.name);
-            return;
-        }
-
-        Debug.LogWarning("RestartGame fallback triggered. Rebuilding menu without scene reload.");
         ClearRuntimeObjects();
         SpawnMainMenu();
         Destroy(gameObject);
     }
+
 
     void ClearRuntimeObjects()
     {
@@ -529,6 +516,25 @@ public class GameManager : MonoBehaviour
             Destroy(uiObj);
         }
 
+        foreach (GameOverUI ui in FindObjectsOfType<GameOverUI>())
+        {
+            Destroy(ui.gameObject);
+        }
+
+        foreach (Canvas canvas in FindObjectsOfType<Canvas>())
+        {
+            if (canvas.name.Contains("GameOver"))
+            {
+                Destroy(canvas.gameObject);
+            }
+        }
+
+        EventSystem existingEventSystem = FindObjectOfType<EventSystem>();
+        if (existingEventSystem != null)
+        {
+            Destroy(existingEventSystem.gameObject);
+        }
+
         GameObject audioObj = GameObject.Find("Audio Manager");
         if (audioObj != null)
         {
@@ -545,13 +551,33 @@ public class GameManager : MonoBehaviour
 
     void SpawnMainMenu()
     {
+
         if (FindObjectOfType<MainMenu>() != null)
         {
             return;
         }
 
+        EnsureMenuCamera();
+
         GameObject menuObj = new GameObject("Main Menu");
         menuObj.AddComponent<MainMenu>();
+        DontDestroyOnLoad(menuObj);
+    }
+
+    void EnsureMenuCamera()
+    {
+        if (Camera.main != null)
+        {
+            return;
+        }
+
+        GameObject camObj = new GameObject("Menu Camera");
+        Camera camera = camObj.AddComponent<Camera>();
+        camera.orthographic = true;
+        camera.orthographicSize = 10f;
+        camera.backgroundColor = Color.black;
+        camObj.tag = "MainCamera";
+        camObj.AddComponent<AudioListener>();
     }
 
     public Vector2Int GetPlayerGridPosition()
@@ -649,6 +675,7 @@ public class GameManager : MonoBehaviour
         }
     }
 }
+
 
 
 

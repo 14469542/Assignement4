@@ -10,6 +10,7 @@ public class MainMenu : MonoBehaviour
 
     void Start()
     {
+        Debug.Log("MainMenu Start invoked");
         highScore = PlayerPrefs.GetInt("HighScore", 0);
 
        
@@ -226,6 +227,7 @@ public class MainMenu : MonoBehaviour
  
     void StartGame()
     {
+        Debug.Log("MainMenu StartGame");
         if (gameStarted) return;
         gameStarted = true;
 
@@ -264,6 +266,7 @@ public class PulseAnimation : MonoBehaviour
 
     void Start()
     {
+        Debug.Log("MainMenu Start invoked");
         text = GetComponent<Text>();
     }
 
@@ -282,6 +285,7 @@ public class BlinkAnimation : MonoBehaviour
 
     void Start()
     {
+        Debug.Log("MainMenu Start invoked");
         text = GetComponent<Text>();
     }
 
