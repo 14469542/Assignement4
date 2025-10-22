@@ -1,63 +1,23 @@
-# Unity generated folders
-/Library/
-/Temp/
-/Obj/
-/Logs/
-/UserSettings/
-/MemoryCaptures/
+/*
 
-# Build products
-/Build/
-/Builds/
-/build/
-/builds/
+!.gitignore
+!README.md
 
-# Asset meta caches
-/Assets/StreamingAssets/aa.meta
-/Assets/StreamingAssets/aa/
-/Assets/Bundles/
+!Assets/
+!Assets/**
 
-# Visual Studio / Rider
-.vs/
-/*.csproj
-/*.sln
-/*.suo
-/*.user
-/*.userprefs
-/*.pidb
-/*.booproj
-/*.svd
-/*.pdb
+!Packages/
+!Packages/**
 
-# Unity auto-generated project files
-/Assembly-CSharp.csproj
-/Assembly-CSharp-Editor.csproj
-/Assembly-CSharp-Editor-firstpass.csproj
-/Assembly-CSharp-Editor-firstpass.csproj.user
-/Assembly-CSharp-Editor.csproj.user
-/Assembly-CSharp.csproj.user
-/Assembly-CSharp-FirstPass.csproj
-/Assembly-CSharp-FirstPass.csproj.user
-/Assembly-CSharp-Editor-firstpass.csproj.DotSettings.user
+!ProjectSettings/
+!ProjectSettings/**
 
-# IDE caches
-.idea/
-.history/
-
-# Package cache
-/Packages/manifest.temp.json
-/Packages/packages-lock.tmp
-
-# Crash reports
-sysinfo.txt
-
-# Generated streaming assets
-/Assets/StreamingAssets/aa.meta
-/Assets/StreamingAssets/aa/
-
-# Local configuration
-*.local
-
-# Addressables build
-/ServerData/
-
+# Re-ignore Unity caches and build outputs
+Library/
+Temp/
+Obj/
+Logs/
+UserSettings/
+Build/
+Builds/
+MemoryCaptures/
