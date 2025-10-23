@@ -220,11 +220,11 @@ public class GameOverUI : MonoBehaviour
     
     if (GameManager.Instance == null)
     {
-        Debug.LogError("‚ù?GameManager.Instance is NULL!");
+        Debug.LogError("GameManager.Instance is NULL!");
         return;
     }
     
-    Debug.Log("‚ú?GameManager.Instance exists");
+    Debug.Log("GameManager.Instance exists");
     
     
     Transform canvasTransform = transform.parent;

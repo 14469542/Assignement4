@@ -13,7 +13,7 @@ public class AudioManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            Debug.Log("âœ?AudioManager initialized (no audio)");
+            Debug.Log("AudioManager initialized (no audio)");
         }
         else
         {
