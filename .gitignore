@@ -1,8 +1,4 @@
-# ==========================================
-# Unity 项目 .gitignore - 完整严格版本
-# ==========================================
 
-# ============ Unity 生成的文件夹 ============
 [Ll]ibrary/
 [Tt]emp/
 [Oo]bj/
@@ -12,86 +8,52 @@
 [Uu]ser[Ss]ettings/
 [Mm]emoryCaptures/
 
-# Unity 引擎文件夹
-[Mm]ono[Bb]leeding[Ee]dge/
-[Uu]nity[Cc]rash[Hh]andler*/
-[Dd]ata/
 
-# ============ 所有 Unity 自动生成的文件 ============
-# .meta 文件（全部忽略）
+*_Data/
+*_BackUpThisFolder_ButDontShipItWithYour Game/
+
+
+[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*/*.bin*
+[Aa]ssets/[Ss]treamingAssets/aa/
+[Aa]ssets/[Ss]treamingAssets/aa.meta
+
+
 *.meta
 
-# Unity 场景和资源文件
+
 *.unity
 *.asset
 *.prefab
 *.mat
 *.controller
 *.anim
-*.cubemap
-*.flare
-*.fontsettings
-*.guiskin
-*.mask
-*.overrideController
-*.physicMaterial
-*.physicsMaterial2D
-*.playable
-*.shadervariants
-*.spriteatlas
-*.terrainlayer
 
-# 可执行文件和库文件
-*.exe
-*.dll
-*.so
-*.dylib
-*.a
-*.lib
 
-# 配置和初始化文件
-*.ini
-*.config
-*.info
-boot.config
+sysinfo.txt
+*.log
+*.stackdump
+[Uu]pgrade[Ll]og*.htm
+[Uu]pgrade[Ll]og*.html
+
+
+RuntimeInitializeOnLoads.json
+ScriptingAssemblies.json
+
+
+unity.default.resources
+unity_builtin_extra
+*.resS
 globalgamemanagers*
 level*
 sharedassets*
-resources.assets*
 
-# Browser 相关
-*.browser
-browscap.ini
-[Cc]ompat.browser
 
-# 设置和映射文件
-settings.map
-machine.config
-web.config
-
-# ASPX 和帮助文件
-*.aspx
-
-# ResS 文件
-*.resS
-
-# ============ Packages 配置 ============
-# 只保留 manifest.json，其他全部忽略
-Packages/*
-!Packages/manifest.json
-
-# ============ ProjectSettings ============
-# ProjectSettings 下的所有内容都忽略，只保留 ProjectVersion.txt
-ProjectSettings/*
-!ProjectSettings/ProjectVersion.txt
-
-# ============ IDE 和编辑器 ============
-# Visual Studio
 .vs/
 *.csproj
 *.unityproj
 *.sln
 *.suo
+*.tmp
 *.user
 *.userprefs
 *.pidb
@@ -102,16 +64,24 @@ ProjectSettings/*
 *.opendb
 *.VC.db
 
-# Visual Studio Code
+
 .vscode/
+.vscofnig
 *.code-workspace
 
-# Rider
+
 .idea/
 *.sln.iml
+[Aa]ssets/Plugins/Editor/JetBrains*
 
-# ============ 操作系统 ============
-# Windows
+
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+
+
 Thumbs.db
 Thumbs.db.meta
 ehthumbs.db
@@ -120,32 +90,42 @@ ehthumbs_vista.db
 [Dd]esktop.ini
 $RECYCLE.BIN/
 
-# macOS
-.DS_Store
-.AppleDouble
-.LSOverride
-Icon
-._*
 
-# Linux
 *~
 .directory
 .Trash-*
 
-# ============ 构建输出 ============
+
+new scene/
+[Ss]ample[Ss]cene/
+
+
 *.apk
 *.aab
 *.unitypackage
 *.app
 
-# ============ 日志和报告 ============
-sysinfo.txt
-*.log
-*.stackdump
-crashlytics-build.properties
-[Uu]pgrade[Ll]og*.htm
-[Uu]pgrade[Ll]og*.html
 
-# ============ 其他 ============
+crashlytics-build.properties
 .gradle/
 [Aa]sset[Ss]tore[Tt]ools*
+
+
+Packages/*
+!Packages/manifest.json
+
+
+ProjectSettings/*
+!ProjectSettings/ProjectVersion.txt
+!ProjectSettings/ProjectSettings.asset
+!ProjectSettings/TagManager.asset
+!ProjectSettings/QualitySettings.asset
+
+
+.vscofnig
+
+
+ProjectSettings/*.asset
+
+
+!ProjectSettings/ProjectVersion.txt
